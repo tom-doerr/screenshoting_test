@@ -1,5 +1,6 @@
 import argparse
 import os
+import sys
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
@@ -43,6 +44,6 @@ if __name__ == "__main__":
     try:
         saved_path = capture_screenshot(args.url, args.output)
         print(f"Screenshot saved to: {saved_path}")
-    except Exception as e:
+    except RuntimeError as e:
         print(f"Error: {str(e)}")
-        exit(1)
+        sys.exit(1)
