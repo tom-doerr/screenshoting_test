@@ -20,6 +20,8 @@ def fixture_test_server():
 
 def test_screenshot_creation(local_test_server, tmp_path):
     """Test basic screenshot functionality with local test server"""
+    # The local_test_server fixture is used implicitly by making the HTTP request
+    assert local_test_server is None  # This is just to use the fixture parameter
     output_file = tmp_path / "screenshot.png"
     capture_screenshot('http://localhost:8000', str(output_file))
     
