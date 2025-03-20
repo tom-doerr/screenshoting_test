@@ -4,17 +4,18 @@ import sys
 from datetime import datetime
 from playwright.sync_api import sync_playwright
 
+
 def capture_screenshot(url, output_file=None):
     """Capture website screenshot and save to file.
-    
+
     Args:
         url (str): Valid URL to capture
         output_file (str, optional): Output path. Defaults to timestamped filename.
-    
+
     Returns:
         str: Path to saved screenshot
     """
-    if not url.startswith(('http://', 'https://')):
+    if not url.startswith(("http://", "https://")):
         raise ValueError("Invalid URL format. Must include http:// or https://")
 
     if not output_file:
@@ -34,6 +35,7 @@ def capture_screenshot(url, output_file=None):
         raise RuntimeError(f"Screenshot failed: {str(e)}") from e
 
     return output_file
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capture website screenshot")
