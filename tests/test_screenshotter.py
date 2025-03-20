@@ -29,14 +29,33 @@ def test_screenshot_creation(local_test_server, tmp_path):
     capture_screenshot("http://localhost:8000", str(output_file))
 
     assert output_file.exists(), "Screenshot file was not created"
-    assert output_file.stat().st_size > 0, "Screenshot file is empty"
+    assert output_file.stat().st_size > 0, "Screenshot file is empty (0 bytes)"
+
+def test_default_filename(local_test_server, tmp_path):
+    """Test default filename generation"""
+    with pytest.MonkeyPatch().context() as mp:
+        mp.chdir(tmp_path)
+        result_path = capture_screenshot("http://localhost:8000")
+        assert os.path.exists(result_path), "Default file not created"
+        assert result_path.startswith("screenshot_"), "Filename prefix mismatch"
+        assert result_path.endswith(".png"), "File extension mismatch"
+        assert datetime.strptime(result_path[11:-4], "%Y%m%d_%H%M%S"), "Timestamp format invalid"
+
+def test_unreachable_url(tmp_path):
+    """Test handling of unreachable URLs"""
+    output_file = tmp_path / "unreachable.png"
+    
+    with pytest.raises(RuntimeError):
+        capture_screenshot("http://localhost:12345", str(output_file))
+        
+    assert not output_file.exists(), "File should not be created for unreachable URL"
 
 
 def test_invalid_url_handling(tmp_path):
     """Test proper handling of invalid URLs"""
     output_file = tmp_path / "invalid.png"
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         capture_screenshot("not_a_valid_url", str(output_file))
 
     assert not output_file.exists(), "Should not create file for invalid URL"

@@ -15,8 +15,10 @@ def capture_screenshot(url, output_file=None):
     Returns:
         str: Path to saved screenshot
     """
+    # Validate URL format
+    url = url.strip()
     if not url.startswith(("http://", "https://")):
-        raise ValueError("Invalid URL format. Must include http:// or https://")
+        raise ValueError(f"Invalid URL format: '{url}' - must include http:// or https://")
 
     if not output_file:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
