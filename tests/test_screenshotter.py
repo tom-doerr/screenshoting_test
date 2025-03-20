@@ -5,6 +5,7 @@ import pytest
 sys.path.append(os.getcwd())  # Add project root to path
 from http.server import SimpleHTTPRequestHandler, HTTPServer
 from threading import Thread
+from datetime import datetime
 from screenshotter import capture_screenshot
 
 
@@ -33,6 +34,7 @@ def test_screenshot_creation(local_test_server, tmp_path):
 
 def test_default_filename(local_test_server, tmp_path):
     """Test default filename generation"""
+    assert local_test_server is None  # Use fixture implicitly
     with pytest.MonkeyPatch().context() as mp:
         mp.chdir(tmp_path)
         result_path = capture_screenshot("http://localhost:8000")
